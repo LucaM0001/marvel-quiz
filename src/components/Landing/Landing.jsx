@@ -14,13 +14,41 @@ const Landing = () => {
     }, 1000)
   }, [])
 
+  const setLeftImg = () => {
+    refWolverine.current.classList.add("leftImg")
+  }
+
+  const setRightImg = () => {
+    refWolverine.current.classList.add("rightImg")
+  }
+
+  const clearImg = () => {
+    if (refWolverine.current.classList.contains("leftImg")) {
+      refWolverine.current.classList.remove("leftImg")
+    } else if (refWolverine.current.classList.contains("rightImg")) {
+      refWolverine.current.classList.remove("rightImg")
+    }
+  }
+
   const displayBtn = btn && (
     <>
       <div className="leftBox">
-        <button className="btn-welcome">Inscription</button>
+        <button
+          className="btn-welcome"
+          onMouseOver={setLeftImg}
+          onMouseOut={clearImg}
+        >
+          Inscription
+        </button>
       </div>
       <div className="rightBox">
-        <button className="btn-welcome">Connexion</button>
+        <button
+          className="btn-welcome"
+          onMouseOver={setRightImg}
+          onMouseOut={clearImg}
+        >
+          Connexion
+        </button>
       </div>
     </>
   )
