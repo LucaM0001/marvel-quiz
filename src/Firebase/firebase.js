@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app"
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth"
 
@@ -20,16 +21,19 @@ class Firebase {
     this.auth = getAuth(this.app)
   }
 
-  // inscription
+  // signup
   signupUser = (email, password) =>
     createUserWithEmailAndPassword(this.auth, email, password)
 
-  // connexion
+  // login
   loginUser = (email, password) =>
     signInWithEmailAndPassword(this.auth, email, password)
 
-  // déconnexion
+  // logout
   signoutUser = () => this.auth.signOut()
+
+  // forgetpassword
+  passwordReset = (email) => sendPasswordResetEmail(this.auth, email)
 }
 
 export default Firebase

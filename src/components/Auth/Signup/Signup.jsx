@@ -22,7 +22,6 @@ const Signup = () => {
     firebase
       .signupUser(email, password)
       .then((userCredential) => {
-        console.log(userCredential.user)
         navigate("/welcome")
       })
       .catch((err) => setError(err.message))

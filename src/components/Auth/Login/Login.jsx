@@ -21,10 +21,10 @@ const Login = () => {
     firebase
       .loginUser(email, password)
       .then((userCredential) => {
-        console.log(userCredential.user)
         navigate("/welcome")
       })
       .catch((err) => setError(err.message))
+    reset()
   }
 
   const errorMsg = error !== "" && <span>{error}</span>
@@ -82,6 +82,10 @@ const Login = () => {
             <div className="linkContainer">
               <Link className="simpleLink" to={"/signup"}>
                 Nouveau sur Marvel Quiz? Inscrivez-vous maintenant.
+              </Link>
+              <br />
+              <Link className="simpleLink" to={"/forgetpassword"}>
+                Mot de passe oublié? Récupérez-le ici.
               </Link>
             </div>
           </div>
