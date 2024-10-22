@@ -14,7 +14,6 @@ const Signup = () => {
     register,
     handleSubmit,
     formState: { errors, isValid },
-    watch,
     reset,
     getValues,
   } = useForm({ mode: "all" })
@@ -35,7 +34,7 @@ const Signup = () => {
   const errorMsg = error !== "" && <span>{error}</span>
 
   return (
-    <div className="signupLoginBox">
+    <div className="signUpLoginBox">
       <div className="slContainer">
         <div className="formBoxLeftSignup"></div>
         <div className="formBoxRight">
