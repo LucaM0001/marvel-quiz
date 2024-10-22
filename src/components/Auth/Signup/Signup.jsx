@@ -18,10 +18,13 @@ const Signup = () => {
     getValues,
   } = useForm({ mode: "all" })
 
-  const onSubmit = ({ email, password }) => {
+  const onSubmit = ({ pseudo, email, password }) => {
     firebase
       .signupUser(email, password)
-      .then((userCredential) => {
+      .then((authUser) => {
+        return firebase.user(authUser.user.uid, { pseudo, email })
+      })
+      .then(() => {
         navigate("/welcome")
       })
       .catch((err) => setError(err.message))

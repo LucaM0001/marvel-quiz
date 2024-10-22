@@ -6,6 +6,8 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth"
 
+import { doc, getFirestore, setDoc } from "firebase/firestore"
+
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -19,6 +21,7 @@ class Firebase {
   constructor() {
     this.app = initializeApp(firebaseConfig)
     this.auth = getAuth(this.app)
+    this.db = getFirestore(this.app)
   }
 
   // signup
@@ -34,6 +37,8 @@ class Firebase {
 
   // forgetpassword
   passwordReset = (email) => sendPasswordResetEmail(this.auth, email)
+
+  user = (uid, data) => setDoc(doc(this.db, "users", `${uid}`), { ...data })
 }
 
 export default Firebase
