@@ -3,6 +3,7 @@ import Logout from "../Logout/Logout"
 import Quiz from "../Quiz/Quiz"
 import { FirebaseContext, onAuthStateChanged } from "../../Firebase"
 import { useNavigate } from "react-router-dom"
+import { doc, getDoc } from "firebase/firestore"
 
 const Welcome = () => {
   const navigate = useNavigate()
@@ -10,16 +11,24 @@ const Welcome = () => {
   const firebase = useContext(FirebaseContext)
 
   const [userSession, setUserSession] = useState(null)
+  const [userData, setUserData] = useState({})
 
   useEffect(() => {
     let listener = onAuthStateChanged(firebase.auth, (user) => {
       user ? setUserSession(user) : navigate("/")
     })
 
+    if (!!userSession) {
+      firebase
+        .getUser(userSession.uid)
+        .then((res) => setUserData(res))
+        .catch((err) => console.log(err.message))
+    }
+
     return () => {
       listener()
     }
-  }, [])
+  }, [userSession])
 
   return userSession === null ? (
     <>
@@ -30,7 +39,7 @@ const Welcome = () => {
     <div className="quiz-bg">
       <div className="container">
         <Logout />
-        <Quiz />
+        <Quiz userData={userData} />
       </div>
     </div>
   )

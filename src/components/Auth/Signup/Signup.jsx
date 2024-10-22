@@ -22,7 +22,7 @@ const Signup = () => {
     firebase
       .signupUser(email, password)
       .then((authUser) => {
-        return firebase.user(authUser.user.uid, { pseudo, email })
+        return firebase.setUser(authUser.user.uid, { pseudo, email })
       })
       .then(() => {
         navigate("/welcome")
