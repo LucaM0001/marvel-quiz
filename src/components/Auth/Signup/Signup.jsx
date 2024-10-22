@@ -1,8 +1,11 @@
 import { useContext, useState } from "react"
 import { useForm } from "react-hook-form"
 import { FirebaseContext } from "../../../Firebase"
+import { Link, useNavigate } from "react-router-dom"
 
 const Signup = () => {
+  const navigate = useNavigate()
+
   const firebase = useContext(FirebaseContext)
 
   const [error, setError] = useState("")
@@ -19,14 +22,17 @@ const Signup = () => {
   const onSubmit = ({ email, password }) => {
     firebase
       .signupUser(email, password)
-      .then((user) => console.log(user))
-      .catch((error) => setError(error))
+      .then((userCredential) => {
+        console.log(userCredential.user)
+        navigate("/welcome")
+      })
+      .catch((err) => setError(err.message))
     reset()
   }
 
   // const watchedFields = watch()
 
-  const errorMsg = error !== "" && <span>{error.message}</span>
+  const errorMsg = error !== "" && <span>{error}</span>
 
   return (
     <div className="signupLoginBox">
@@ -125,6 +131,11 @@ const Signup = () => {
 
               <button disabled={!isValid}>Inscription</button>
             </form>
+            <div className="linkContainer">
+              <Link className="simpleLink" to={"/login"}>
+                Déjà inscrit? Connectez-vous.
+              </Link>
+            </div>
           </div>
         </div>
       </div>
