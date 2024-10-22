@@ -286,7 +286,6 @@ footer {
   padding: 10px 0;
   font-size: 17px;
   color: var(--red-color);
-  text-transform: uppercase;
   font-weight: bold;
   margin-bottom: 30px;
   border: none;
@@ -295,12 +294,17 @@ footer {
   outline: none;
 }
 
+.formContent .inputBox p {
+  position: absolute;
+  top: 26px;
+}
+
 .formContent .inputBox label {
   color: var(--white-color);
   position: absolute;
   top: 0;
   left: 0;
-  padding: 10px 0;
+  padding: 18px 0 10px 0;
   font-size: 17px;
   pointer-events: none;
   -webkit-transition: 0.2s ease-in;
