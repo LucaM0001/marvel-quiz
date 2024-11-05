@@ -26,7 +26,7 @@ const App = () => {
         <Route path="*" Component={ErroPage} />
       </Routes>
 
-      <ToastContainer position="top-right" autoClose={1000} />
+      <ToastContainer position="top-right" autoClose={2000} />
 
       <Footer />
     </Router>
