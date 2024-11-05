@@ -6,8 +6,11 @@ import Login from "./components/Auth/Login/Login"
 import Signup from "./components/Auth/Signup/Signup"
 import ErroPage from "./components/ErroPage/ErroPage"
 import ForgetPassword from "./components/ForgetPassword/ForgetPassword"
-import "./App.css"
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/ReactToastify.min.css"
+
+import "./App.css"
 
 const App = () => {
   return (
@@ -22,6 +25,8 @@ const App = () => {
         <Route path="/forgetpassword" Component={ForgetPassword} />
         <Route path="*" Component={ErroPage} />
       </Routes>
+
+      <ToastContainer position="top-right" />
 
       <Footer />
     </Router>

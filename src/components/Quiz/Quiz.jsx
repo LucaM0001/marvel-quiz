@@ -2,6 +2,7 @@ import { Component, createRef } from "react"
 import Levels from "../Levels/Levels"
 import ProgressBar from "../ProgressBar/ProgressBar"
 import { QuizMarvel } from "../../quizMarvel"
+import { toast } from "react-toastify"
 
 class Quiz extends Component {
   state = {
@@ -15,6 +16,7 @@ class Quiz extends Component {
     btnDisabled: true,
     userAnswer: null,
     score: 0,
+    showWelcomeMsg: false,
   }
 
   storedDataRef = createRef()
@@ -34,11 +36,24 @@ class Quiz extends Component {
     }
   }
 
-  componentDidMount = (level) => {
+  showWelcomeMsg = (pseudo) => {
+    if (!this.state.showWelcomeMsg) {
+      this.setState({ showWelcomeMsg: true })
+      toast.warning(`Bonjour ${pseudo} et bonne chance`, {
+        bodyClassName: "toastify-color-welcome",
+      })
+    }
+  }
+
+  componentDidMount = () => {
     this.loadQuestions(this.state.levelNames[this.state.quizLevel])
   }
 
   componentDidUpdate = (prevProps, prevState) => {
+    if (this.props.userData.pseudo) {
+      this.showWelcomeMsg(this.props.userData.pseudo)
+    }
+
     if (this.state.storedQuestions !== prevState.storedQuestions) {
       this.setState({
         question: this.state.storedQuestions[this.state.idQuestion].question,
@@ -71,6 +86,10 @@ class Quiz extends Component {
 
     if (this.state.userAnswer === goodAnswer) {
       this.setState((prevState) => ({ score: prevState.score + 1 }))
+
+      toast.success("Bravo + 1")
+    } else {
+      toast.error("Raté 0")
     }
   }
 
