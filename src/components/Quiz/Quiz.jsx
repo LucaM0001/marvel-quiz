@@ -3,6 +3,7 @@ import Levels from "../Levels/Levels"
 import ProgressBar from "../ProgressBar/ProgressBar"
 import { QuizMarvel } from "../../quizMarvel"
 import { toast } from "react-toastify"
+import QuizOver from "../QuizOver/QuizOver"
 
 class Quiz extends Component {
   state = {
@@ -17,6 +18,7 @@ class Quiz extends Component {
     userAnswer: null,
     score: 0,
     showWelcomeMsg: false,
+    quizEnd: false,
   }
 
   storedDataRef = createRef()
@@ -75,9 +77,13 @@ class Quiz extends Component {
     this.setState({ userAnswer: selectedAnswer, btnDisabled: false })
   }
 
+  gameOver = () => {
+    this.setState({ quizEnd: true })
+  }
+
   nextQuestion = () => {
     if (this.state.idQuestion === this.state.maxQuestions - 1) {
-      // End
+      this.gameOver()
     } else {
       this.setState((prevState) => ({ idQuestion: prevState.idQuestion + 1 }))
     }
@@ -108,10 +114,15 @@ class Quiz extends Component {
       </p>
     ))
 
-    return (
-      <div>
+    return this.state.quizEnd ? (
+      <QuizOver />
+    ) : (
+      <>
         <Levels />
-        <ProgressBar />
+        <ProgressBar
+          idQuestion={this.state.idQuestion}
+          maxQuestions={this.state.maxQuestions}
+        />
         <h2>{this.state.question}</h2>
         {displayOptions}
         <button
@@ -119,9 +130,11 @@ class Quiz extends Component {
           className="btnSubmit"
           onClick={() => this.nextQuestion()}
         >
-          Suivant
+          {this.state.idQuestion < this.state.maxQuestions - 1
+            ? "Suivant"
+            : "Terminer"}
         </button>
-      </div>
+      </>
     )
   }
 }
