@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import { Component, createRef } from "react"
 import Levels from "../Levels/Levels"
 import ProgressBar from "../ProgressBar/ProgressBar"
 import { QuizMarvel } from "../../quizMarvel"
@@ -14,12 +14,17 @@ class Quiz extends Component {
     idQuestion: 0,
     btnDisabled: true,
     userAnswer: null,
+    score: 0,
   }
+
+  storedDataRef = createRef()
 
   loadQuestions = (level) => {
     const fetchedArrayQuiz = QuizMarvel[0].quizz[level]
 
     if (fetchedArrayQuiz.length >= this.state.maxQuestions) {
+      this.storedDataRef.current = fetchedArrayQuiz
+
       const newArray = fetchedArrayQuiz.map(
         ({ answer, ...keepRest }) => keepRest
       )
@@ -40,10 +45,33 @@ class Quiz extends Component {
         options: this.state.storedQuestions[this.state.idQuestion].options,
       })
     }
+
+    if (this.state.idQuestion !== prevState.idQuestion) {
+      this.setState({
+        question: this.state.storedQuestions[this.state.idQuestion].question,
+        options: this.state.storedQuestions[this.state.idQuestion].options,
+        userAnswer: null,
+        btnDisabled: true,
+      })
+    }
   }
 
   submitAnswer = (selectedAnswer) => {
     this.setState({ userAnswer: selectedAnswer, btnDisabled: false })
+  }
+
+  nextQuestion = () => {
+    if (this.state.idQuestion === this.state.maxQuestions - 1) {
+      // End
+    } else {
+      this.setState((prevState) => ({ idQuestion: prevState.idQuestion + 1 }))
+    }
+
+    const goodAnswer = this.storedDataRef.current[this.state.idQuestion].answer
+
+    if (this.state.userAnswer === goodAnswer) {
+      this.setState((prevState) => ({ score: prevState.score + 1 }))
+    }
   }
 
   render() {
@@ -67,7 +95,11 @@ class Quiz extends Component {
         <ProgressBar />
         <h2>{this.state.question}</h2>
         {displayOptions}
-        <button disabled={this.state.btnDisabled} className="btnSubmit">
+        <button
+          disabled={this.state.btnDisabled}
+          className="btnSubmit"
+          onClick={() => this.nextQuestion()}
+        >
           Suivant
         </button>
       </div>
