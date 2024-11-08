@@ -1,29 +1,55 @@
 import { forwardRef, Fragment, memo, useEffect, useState } from "react"
 
 const QuizOver = forwardRef((props, ref) => {
-  const { levelNames, quizLevel, score, percent, maxQuestions } = props
+  // props
+  const {
+    levelNames,
+    quizLevel,
+    score,
+    percent,
+    maxQuestions,
+    loadLevelQuestion,
+  } = props
 
+  // quiz
   const [asked, setAsked] = useState([])
 
+  // get questions and answers when component dit mount
   useEffect(() => {
     setAsked(ref.current)
   }, [ref])
 
+  // Success rate
   const averageGrade = maxQuestions / 2
 
+  // if score is lower than success rate restart the level
+  if (score < averageGrade) setTimeout(() => loadLevelQuestion(quizLevel), 3000)
+
+  // decision when quiz is finished
   const decision =
-    score > averageGrade ? (
+    score > averageGrade ? ( // is the score higher than the success rate ?
       <Fragment>
         <div className="stepsBtnContainer">
-          {quizLevel < levelNames.length ? (
+          {quizLevel < levelNames.length ? ( // Not an expert ?
             <Fragment>
               <p className="successMsg">Bravo, passez au niveau suivant!</p>
-              <button className="btnResult success">Niveau Suivant</button>
+              <button
+                className="btnResult success"
+                onClick={() => loadLevelQuestion(quizLevel)}
+              >
+                Niveau Suivant
+              </button>
             </Fragment>
           ) : (
+            // An expert ?
             <Fragment>
               <p className="successMsg">Bravo, vous êtes un expert !</p>
-              <button className="btnResult gameOver">Niveau Suivant</button>
+              <button
+                className="btnResult gameOver"
+                onClick={() => loadLevelQuestion(0)}
+              >
+                Accueil
+              </button>
             </Fragment>
           )}
         </div>
@@ -35,6 +61,7 @@ const QuizOver = forwardRef((props, ref) => {
         </div>
       </Fragment>
     ) : (
+      // not
       <Fragment>
         <div className="stepsBtnContainer">
           <p className="failureMsg">Vous avez échoué !</p>
@@ -48,8 +75,9 @@ const QuizOver = forwardRef((props, ref) => {
       </Fragment>
     )
 
+  // the answers to the quiz questions
   const questionAnswer =
-    score >= averageGrade ? (
+    score >= averageGrade ? ( // show answers if score is greater than or equal to success rate
       asked.map((question) => (
         <tr key={question.id}>
           <td>{question.question}</td>
@@ -60,8 +88,10 @@ const QuizOver = forwardRef((props, ref) => {
         </tr>
       ))
     ) : (
+      // not
       <tr>
         <td colSpan={3}>
+          <div className="loader"></div>
           <p style={{ textAlign: "center", color: "red" }}>Pas de réponse!</p>
         </td>
       </tr>

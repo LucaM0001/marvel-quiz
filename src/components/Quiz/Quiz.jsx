@@ -6,23 +6,31 @@ import { toast } from "react-toastify"
 import QuizOver from "../QuizOver/QuizOver"
 
 class Quiz extends Component {
-  state = {
-    levelNames: ["debutant", "confirme", "expert"],
-    quizLevel: 0,
-    maxQuestions: 10,
-    storedQuestions: [],
-    question: null,
-    options: [],
-    idQuestion: 0,
-    btnDisabled: true,
-    userAnswer: null,
-    score: 0,
-    showWelcomeMsg: false,
-    quizEnd: false,
+  // constructor
+  constructor(props) {
+    super(props)
+
+    this.initialState = {
+      levelNames: ["debutant", "confirme", "expert"],
+      quizLevel: 0,
+      maxQuestions: 10,
+      storedQuestions: [],
+      question: null,
+      options: [],
+      idQuestion: 0,
+      btnDisabled: true,
+      userAnswer: null,
+      score: 0,
+      showWelcomeMsg: false,
+      quizEnd: false,
+    }
+
+    this.state = this.initialState
+
+    this.storedDataRef = createRef()
   }
 
-  storedDataRef = createRef()
-
+  // Methods for loading questions
   loadQuestions = (level) => {
     const fetchedArrayQuiz = QuizMarvel[0].quizz[level]
 
@@ -38,7 +46,8 @@ class Quiz extends Component {
     }
   }
 
-  showWelcomeMsg = (pseudo) => {
+  // Method to display the welcome message
+  showToastMsg = (pseudo) => {
     if (!this.state.showWelcomeMsg) {
       this.setState({ showWelcomeMsg: true })
       toast.warning(`Bonjour ${pseudo} et bonne chance`, {
@@ -47,23 +56,34 @@ class Quiz extends Component {
     }
   }
 
+  // Execution of loadQuestion on component did mount
   componentDidMount = () => {
     this.loadQuestions(this.state.levelNames[this.state.quizLevel])
   }
 
+  // when component dit update
   componentDidUpdate = (prevProps, prevState) => {
-    if (this.props.userData.pseudo) {
-      this.showWelcomeMsg(this.props.userData.pseudo)
+    // show welcome message if pseudo is different
+    if (this.props.userData.pseudo !== prevProps.userData.pseudo) {
+      this.showToastMsg(this.props.userData.pseudo)
     }
 
-    if (this.state.storedQuestions !== prevState.storedQuestions) {
+    // if the questions are not the same
+    if (
+      this.state.storedQuestions !== prevState.storedQuestions &&
+      this.state.storedQuestions.length
+    ) {
       this.setState({
         question: this.state.storedQuestions[this.state.idQuestion].question,
         options: this.state.storedQuestions[this.state.idQuestion].options,
       })
     }
 
-    if (this.state.idQuestion !== prevState.idQuestion) {
+    // if question id are not the same
+    if (
+      this.state.idQuestion !== prevState.idQuestion &&
+      this.state.storedQuestions.length
+    ) {
       this.setState({
         question: this.state.storedQuestions[this.state.idQuestion].question,
         options: this.state.storedQuestions[this.state.idQuestion].options,
@@ -73,12 +93,15 @@ class Quiz extends Component {
     }
   }
 
+  // submit the user answer
   submitAnswer = (selectedAnswer) => {
     this.setState({ userAnswer: selectedAnswer, btnDisabled: false })
   }
 
+  // Recovery of success percentage
   getPercentage = (maxQuestion, ourScore) => (ourScore / maxQuestion) * 100
 
+  // when the level question are completed
   gameOver = () => {
     const gradePercent = this.getPercentage(
       this.state.maxQuestions,
@@ -96,6 +119,7 @@ class Quiz extends Component {
     }
   }
 
+  // get next questions
   nextQuestion = () => {
     if (this.state.idQuestion === this.state.maxQuestions - 1) {
       this.gameOver()
@@ -114,9 +138,12 @@ class Quiz extends Component {
     }
   }
 
-  render() {
-    // const { pseudo } = this.props.userData
+  loadLevelQuestion = (param) => {
+    this.setState({ ...this.initialState, quizLevel: param })
+    this.loadQuestions(this.state.levelNames[param])
+  }
 
+  render() {
     const displayOptions = this.state.options.map((option, index) => (
       <p
         className={`answerOptions ${
@@ -137,6 +164,7 @@ class Quiz extends Component {
         maxQuestions={this.state.maxQuestions}
         quizLevel={this.state.quizLevel}
         percent={this.state.percent}
+        loadLevelQuestion={this.loadLevelQuestion}
       />
     ) : (
       <>

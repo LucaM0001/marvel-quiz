@@ -13,6 +13,7 @@ const successStyle = {
 const ForgetPassword = () => {
   const navigate = useNavigate()
 
+  // message
   const [success, setSuccess] = useState(null)
   const [error, setError] = useState(null)
 
@@ -25,6 +26,7 @@ const ForgetPassword = () => {
     reset,
   } = useForm({ mode: "all" })
 
+  // reset password
   const onSubmit = async ({ email }) => {
     firebase
       .passwordReset(email)
