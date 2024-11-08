@@ -1,5 +1,6 @@
 import { forwardRef, Fragment, memo, useEffect, useState } from "react"
 import { GiTrophyCup } from "react-icons/gi"
+import Loader from "../Loader/Loader"
 
 const QuizOver = forwardRef((props, ref) => {
   // props
@@ -16,9 +17,7 @@ const QuizOver = forwardRef((props, ref) => {
   const [asked, setAsked] = useState([])
 
   // get questions and answers when component dit mount
-  useEffect(() => {
-    setAsked(ref.current)
-  }, [ref])
+  useEffect(() => setAsked(ref.current), [ref])
 
   // Success rate
   const averageGrade = maxQuestions / 2
@@ -94,8 +93,10 @@ const QuizOver = forwardRef((props, ref) => {
       // not
       <tr>
         <td colSpan={3}>
-          <div className="loader"></div>
-          <p style={{ textAlign: "center", color: "red" }}>Pas de réponse!</p>
+          <Loader
+            loadingMsg={"Pas de réponses!"}
+            styling={{ textAlign: "center", color: "red" }}
+          />
         </td>
       </tr>
     )
