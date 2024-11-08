@@ -11,24 +11,27 @@ import { ToastContainer } from "react-toastify"
 import "react-toastify/ReactToastify.min.css"
 
 import "./App.css"
+import { IconContext } from "react-icons"
 
 const App = () => {
   return (
     <Router>
-      <Header />
+      <IconContext.Provider value={{ style: { verticalAlign: "middle" } }}>
+        <Header />
 
-      <Routes>
-        <Route path="/" Component={Landing} />
-        <Route path="/welcome" Component={Welcome} />
-        <Route path="/login" Component={Login} />
-        <Route path="/signup" Component={Signup} />
-        <Route path="/forgetpassword" Component={ForgetPassword} />
-        <Route path="*" Component={ErroPage} />
-      </Routes>
+        <Routes>
+          <Route path="/" Component={Landing} />
+          <Route path="/welcome" Component={Welcome} />
+          <Route path="/login" Component={Login} />
+          <Route path="/signup" Component={Signup} />
+          <Route path="/forgetpassword" Component={ForgetPassword} />
+          <Route path="*" Component={ErroPage} />
+        </Routes>
 
-      <ToastContainer position="top-right" autoClose={2000} />
+        <ToastContainer position="top-right" autoClose={2000} />
 
-      <Footer />
+        <Footer />
+      </IconContext.Provider>
     </Router>
   )
 }

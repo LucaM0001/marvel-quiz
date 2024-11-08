@@ -4,6 +4,7 @@ import ProgressBar from "../ProgressBar/ProgressBar"
 import { QuizMarvel } from "../../quizMarvel"
 import { toast } from "react-toastify"
 import QuizOver from "../QuizOver/QuizOver"
+import { FaChevronRight } from "react-icons/fa"
 
 class Quiz extends Component {
   // constructor
@@ -154,7 +155,7 @@ class Quiz extends Component {
         key={index}
         onClick={() => this.submitAnswer(option)}
       >
-        {option}
+        <FaChevronRight /> {option}
       </p>
     ))
 
