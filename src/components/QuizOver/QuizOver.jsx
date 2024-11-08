@@ -1,6 +1,7 @@
 import { forwardRef, Fragment, memo, useEffect, useState } from "react"
 import { GiTrophyCup } from "react-icons/gi"
 import Loader from "../Loader/Loader"
+import Modal from "../Modal/Modal"
 
 const QuizOver = forwardRef((props, ref) => {
   // props
@@ -15,9 +16,16 @@ const QuizOver = forwardRef((props, ref) => {
 
   // quiz
   const [asked, setAsked] = useState([])
+  const [openModal, setOpenModal] = useState(false)
 
   // get questions and answers when component dit mount
   useEffect(() => setAsked(ref.current), [ref])
+
+  const showModal = (id) => {
+    setOpenModal(true)
+  }
+
+  const hideModal = () => setOpenModal(false)
 
   // Success rate
   const averageGrade = maxQuestions / 2
@@ -85,7 +93,12 @@ const QuizOver = forwardRef((props, ref) => {
           <td>{question.question}</td>
           <td>{question.answer}</td>
           <td>
-            <button className="btnInfo">Infos</button>
+            <button
+              className="btnInfo"
+              onClick={() => showModal(question.heroId)}
+            >
+              Infos
+            </button>
           </td>
         </tr>
       ))
@@ -121,6 +134,18 @@ const QuizOver = forwardRef((props, ref) => {
           <tbody>{questionAnswer}</tbody>
         </table>
       </div>
+
+      <Modal showModal={openModal} hideModal={hideModal}>
+        <div className="modalHeader">
+          <h2>Titre</h2>
+        </div>
+        <div className="modalBody">
+          <h3>Titre 2</h3>
+        </div>
+        <div className="modalFooter">
+          <button className="modalBtn">Fermer</button>
+        </div>
+      </Modal>
     </>
   )
 })
