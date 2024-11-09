@@ -14,6 +14,12 @@ const QuizOver = forwardRef((props, ref) => {
     loadLevelQuestion,
   } = props
 
+  const API_PUBLIC_KEY = import.meta.env.VITE_APP_MARVEL_API_KEY
+
+  console.log(API_PUBLIC_KEY)
+
+  const hash = "ea0778112f561b17c24a5aca7132bc0e"
+
   // quiz
   const [asked, setAsked] = useState([])
   const [openModal, setOpenModal] = useState(false)
