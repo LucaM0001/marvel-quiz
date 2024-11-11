@@ -26,22 +26,54 @@ const QuizOver = forwardRef((props, ref) => {
   const [loading, setLoading] = useState(true)
 
   // get questions and answers when component dit mount
-  useEffect(() => setAsked(ref.current), [ref])
+  useEffect(() => {
+    setAsked(ref.current), [ref]
 
+    if (localStorage.getItem("marvelStorageDate")) {
+      const date = localStorage.getItem("marvelStorageDate")
+      checkDataAge(date)
+    }
+  })
+
+  // check if the stored information in localStorage exceeds 15 days
+  const checkDataAge = (date) => {
+    const today = Date.now()
+    const timeDifference = today - date
+
+    const daysDifference = timeDifference / (1000 * 3600 * 24)
+
+    if (daysDifference < 15) {
+      localStorage.clear()
+      localStorage.setItem("marvelStorageDate", Date.now())
+    }
+  }
+
+  // show information about a character
   const showModal = (id) => {
     setOpenModal(true)
 
-    axios
-      .get(
-        `https://gateway.marvel.com/v1/public/characters/${id}?ts=1&apikey=${API_PUBLIC_KEY}&hash=${hash}`
-      )
-      .then((response) => {
-        console.log(response)
+    if (localStorage.getItem(id)) {
+      setCharacterInfos(JSON.parse(localStorage.getItem(id)))
+      setLoading(false)
+    } else {
+      axios
+        .get(
+          `https://gateway.marvel.com/v1/public/characters/${id}?ts=1&apikey=${API_PUBLIC_KEY}&hash=${hash}`
+        )
+        .then((response) => {
+          console.log(response)
 
-        setCharacterInfos(response.data)
-        setLoading(false)
-      })
-      .catch((error) => console.log(error))
+          setCharacterInfos(response.data)
+          setLoading(false)
+
+          localStorage.setItem(id, JSON.stringify(response.data))
+
+          if (!localStorage.getItem("marvelStorageDate")) {
+            localStorage.setItem("marvelStorageDate", Date.now())
+          }
+        })
+        .catch((error) => console.log(error))
+    }
   }
 
   const hideModal = () => {
